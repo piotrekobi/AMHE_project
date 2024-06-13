@@ -14,7 +14,6 @@ def genetic_algorithm(pop_size, genome_length, eval_function, generations, diver
     evaluate_population(population, eval_function)
     
     for gen in range(generations):
-        print(f"Generacja {gen + 1}/{generations}")
         offspring = tools.selTournament(population, len(population), tournsize=3)
         offspring = list(map(copy.deepcopy, offspring))
         
