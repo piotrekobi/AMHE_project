@@ -9,7 +9,7 @@ if not hasattr(creator, 'FitnessMin'):
 if not hasattr(creator, 'Individual'):
     creator.create("Individual", list, fitness=creator.FitnessMin)
 
-def genetic_algorithm(pop_size, genome_length, eval_function, generations, diversity_maintenance, **kwargs):
+def genetic_algorithm(pop_size, genome_length, eval_function, generations, diversity_maintenance, convergence=None, **kwargs):
     population = initialize_population(pop_size, genome_length)
     evaluate_population(population, eval_function)
     
@@ -35,8 +35,12 @@ def genetic_algorithm(pop_size, genome_length, eval_function, generations, diver
             population = _clearing(population, kwargs['radius'], kwargs['niche_capacity'])
         elif diversity_maintenance == "crowding":
             _crowding(population, offspring, kwargs['niche_size'])
+        
+        best_individual = select_best(population, 1)[0]
+        if convergence is not None:
+            convergence.append(best_individual.fitness.values[0])
     
-    return select_best(population, 1)[0]
+    return best_individual
 
 def _crowding(population, offspring, niche_size):
     for child in offspring:
